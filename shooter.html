@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Shooter Game</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      background: black;
+      font-family: 'Courier New', Courier, monospace;
+    }
+    canvas {
+      display: block;
+      background-image: url('background.jpg');
+      background-size: cover;
+      background-position: center;
+      width: 100vw;
+      height: 100vh;
+    }
+    #startBtn, #restartBtn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 1rem 2rem;
+      font-size: 1.5rem;
+      background: #00ff00;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      z-index: 2;
+    }
+    #restartBtn {
+      display: none;
+    }
+    #countdown {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 4rem;
+      color: white;
+      z-index: 1;
+      display: none;
+    }
+    #scoreDisplay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 24px;
+      color: white;
+      z-index: 1;
+    }
+    #gameOver {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      color: red;
+      display: none;
+      z-index: 2;
+    }
+    #rules {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #00ff00;
+      text-align: center;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Courier New', Courier, monospace;
+      z-index: 3;
+    }
+    #rules h2 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    #rules ul {
+      font-size: 1.5rem;
+      list-style: none;
+      padding: 0;
+    }
+    #rules li {
+      margin: 10px 0;
+    }
+    #rules p {
+      font-size: 1.2rem;
+      margin-top: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="rules">
+    <h2>Luật Chơi</h2>
+    <ul>
+      <li>Di chuyển phi thuyền bằng phím mũi tên trái/phải hoặc chạm vào hai bên màn hình.</li>
+      <li>Phi thuyền sẽ tự động bắn đạn vào alien.</li>
+      <li>Tiêu diệt càng nhiều alien, tốc độ và cấp độ sẽ tăng.</li>
+      <li>Nếu để lọt quá 10 alien hoặc bị va chạm, bạn sẽ thua.</li>
+    </ul>
+    <p>Nhấn <strong>"Start"</strong> để bắt đầu!</p>
+    <button id="startBtn" style="margin-top: 20px;">Start</button>
+  </div>
+
+  <button id="restartBtn">Restart</button>
+  <div id="countdown"></div>
+  <div id="scoreDisplay">Score: 0</div>
+  <div id="gameOver">GAME OVER</div>
+  <canvas id="gameCanvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const spaceshipImg = new Image();
+    spaceshipImg.src = 'spaceship.png';
+    const alienImg1 = new Image();
+    alienImg1.src = 'alien.png';
+    const alienImg2 = new Image();
+    alienImg2.src = 'alien2.png';
+
+    let spaceship = { x: 375, y: 500, width: 80, height: 80, speed: 5 };
+    let bullets = [];
+    let aliens = [];
+    let keys = {};
+    let score = 0;
+    let gameOver = false;
+    let missedAliens = 0;
+    let alienLevel = 1;
+    let spawnRate = 0.008; // ban đầu spawn thấp
+
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const gameOverText = document.getElementById('gameOver');
+    const restartBtn = document.getElementById('restartBtn');
+    const rules = document.getElementById('rules');
+    const startBtn = document.getElementById('startBtn');
+    const countdown = document.getElementById('countdown');
+
+    function createAliens() {
+      let speed = 1 + alienLevel * 0.5; // tốc độ nhanh hơn khi level tăng
+      aliens.push({
+        x: Math.random() * (canvas.width - 80),
+        y: -80,
+        width: 80,
+        height: 80,
+        speed: speed,
+        img: Math.random() < 0.5 ? alienImg1 : alienImg2
+      });
+    }
+
+    function drawSpaceship() {
+      ctx.drawImage(spaceshipImg, spaceship.x, spaceship.y, spaceship.width, spaceship.height);
+    }
+
+    function drawBullets() {
+      ctx.fillStyle = 'yellow';
+      bullets.forEach((b, index) => {
+        b.y -= 7;
+        ctx.fillRect(b.x, b.y, 5, 10);
+        if (b.y < 0) bullets.splice(index, 1);
+      });
+    }
+
+    function drawAliens() {
+      aliens.forEach((a, index) => {
+        a.y += a.speed;
+        ctx.drawImage(a.img, a.x, a.y, a.width, a.height);
+        if (a.y > canvas.height) {
+          aliens.splice(index, 1);
+          missedAliens++;
+          if (missedAliens >= 10) {
+            gameOver = true;
+            gameOverText.style.display = 'block';
+            restartBtn.style.display = 'block';
+          }
+        }
+      });
+    }
+
+    function detectCollision() {
+      bullets.forEach((b, bi) => {
+        aliens.forEach((a, ai) => {
+          if (
+            b.x < a.x + a.width &&
+            b.x + 5 > a.x &&
+            b.y < a.y + a.height &&
+            b.y + 10 > a.y
+          ) {
+            bullets.splice(bi, 1);
+            aliens.splice(ai, 1);
+            score++;
+            alienLevel = Math.min(20, Math.floor(score / 5) + 1); // tăng cấp nhanh hơn
+            spawnRate = Math.min(0.02, 0.008 + alienLevel * 0.001); // spawn rate cũng tăng nhẹ
+            scoreDisplay.innerText = `Score: ${score}`;
+          }
+        });
+      });
+
+      aliens.forEach((a) => {
+        if (
+          spaceship.x < a.x + a.width &&
+          spaceship.x + spaceship.width > a.x &&
+          spaceship.y < a.y + a.height &&
+          spaceship.y + spaceship.height > a.y
+        ) {
+          gameOver = true;
+          gameOverText.style.display = 'block';
+          restartBtn.style.display = 'block';
+        }
+      });
+    }
+
+    function moveSpaceship() {
+      if (keys['ArrowLeft'] && spaceship.x > 0) spaceship.x -= spaceship.speed;
+      if (keys['ArrowRight'] && spaceship.x + spaceship.width < canvas.width) spaceship.x += spaceship.speed;
+    }
+
+    function gameLoop() {
+      if (gameOver) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawSpaceship();
+      drawBullets();
+      drawAliens();
+      detectCollision();
+      moveSpaceship();
+
+      if (Math.random() < spawnRate) createAliens();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function autoShoot() {
+      if (!gameOver) {
+        bullets.push({ x: spaceship.x + spaceship.width / 2 - 2.5, y: spaceship.y });
+      }
+    }
+    setInterval(autoShoot, 400); // bắn nhanh hơn một chút
+
+    document.addEventListener('keydown', (e) => keys[e.key] = true);
+    document.addEventListener('keyup', (e) => keys[e.key] = false);
+
+    canvas.addEventListener('touchstart', (e) => {
+      const touchX = e.touches[0].clientX;
+      if (touchX < canvas.width / 2) {
+        keys['ArrowLeft'] = true;
+      } else {
+        keys['ArrowRight'] = true;
+      }
+    });
+    canvas.addEventListener('touchend', () => {
+      keys['ArrowLeft'] = false;
+      keys['ArrowRight'] = false;
+    });
+
+    function startGame() {
+      let counter = 3;
+      countdown.style.display = 'block';
+      countdown.innerText = counter;
+      score = 0;
+      missedAliens = 0;
+      alienLevel = 1;
+      spawnRate = 0.008;
+      scoreDisplay.innerText = `Score: ${score}`;
+      aliens = [];
+      bullets = [];
+      spaceship.x = canvas.width / 2 - spaceship.width / 2;
+      spaceship.y = canvas.height - 100;
+      gameOver = false;
+      gameOverText.style.display = 'none';
+      restartBtn.style.display = 'none';
+
+      const countdownInterval = setInterval(() => {
+        counter--;
+        countdown.innerText = counter > 0 ? counter : 'GO!';
+        if (counter < 0) {
+          clearInterval(countdownInterval);
+          countdown.style.display = 'none';
+          requestAnimationFrame(gameLoop);
+        }
+      }, 1000);
+    }
+
+    startBtn.addEventListener('click', () => {
+      rules.style.display = 'none'; // Ẩn luật chơi khi nhấn "Start"
+      startGame();
+    });
+
+    restartBtn.addEventListener('click', () => {
+      startGame();
+    });
+  </script>
+</body>
+</html>

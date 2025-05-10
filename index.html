@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SEV3N.EXE</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Courier New', Courier, monospace;
+      background: url('card.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #00f7ff;
+      overflow-x: hidden;
+    }
+
+    #login-btn {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      padding: 10px 20px;
+      background: transparent;
+      border: 2px solid #00f7ff;
+      color: #00f7ff;
+      font-size: 18px;
+      cursor: pointer;
+      display: block;
+    }
+
+    #main-content {
+      display: none;
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      padding: 40px;
+      box-sizing: border-box;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 5;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .menu {
+      margin-bottom: 30px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .menu-item {
+      cursor: pointer;
+      padding: 5px 10px;
+      border: 1px solid #00f7ff;
+    }
+
+    .menu-item:hover {
+      box-shadow: 0 0 8px #00f7ff;
+      background-color: rgba(0, 255, 255, 0.1);
+    }
+
+    .menu-item.glow {
+      box-shadow: 0 0 12px #00f7ff, 0 0 24px #00f7ff;
+      transition: box-shadow 0.3s ease-in-out;
+    }
+
+    .sectors {
+      display: none;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .sector-card {
+      padding: 10px;
+      width: 220px;
+      text-align: center;
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.0);
+    }
+
+    .sector-card:hover img,
+    .sector-card.glow img {
+      box-shadow: 0 0 12px #00f7ff, 0 0 24px #00f7ff;
+      transition: box-shadow 0.3s ease-in-out;
+    }
+
+    .sector-image {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      box-shadow: none;
+    }
+
+    .sector-image:focus {
+      outline: none;
+      box-shadow: none !important;
+    }
+
+    .sector-title {
+      margin-top: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      color: #00f7ff;
+      text-shadow: 0 0 5px #00f7ff;
+    }
+
+    .sector-detail {
+      display: none;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #00f7ff;
+    }
+
+    #donate-box, #message-box {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    #footer {
+      margin-top: 40px;
+      width: 100%;
+      text-align: center;
+      color: #00f7ff;
+      font-size: 14px;
+      text-shadow: 0 0 4px #00f7ff;
+    }
+
+    #game-frame {
+      display: none;
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    iframe {
+      border: 1px solid #00f7ff;
+    }
+
+    .chat-box {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #00f7ff;
+      padding: 10px;
+      margin: 0 auto;
+      width: 90%;
+      background-color: rgba(0, 255, 255, 0.05);
+      box-shadow: 0 0 10px #00f7ff33;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.5;
+      text-align: left;
+    }
+
+    .chat-box p {
+      margin: 6px 0;
+    }
+  
+    .tier-btn {
+      padding: 8px 12px;
+      border: 1px solid #00f7ff;
+      background: transparent;
+      color: #00f7ff;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+    }
+    .tier-btn.active {
+      background-color: rgba(0, 255, 255, 0.2);
+      box-shadow: 0 0 12px #00f7ff, 0 0 24px #00f7ff;
+    }
+    .tier-btn:hover {
+      background-color: rgba(0, 255, 255, 0.1);
+    }
+
+
+    .tier-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 16px #00f7ff, 0 0 32px #00f7ff;
+    }
+
+    #tier-image {
+      transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+
+    #tier-display.show img {
+      transform: scale(1.02);
+      opacity: 1;
+    }
+
+    @keyframes fadeRise {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #tier-display {
+      animation: fadeRise 0.5s ease forwards;
+    }
+
+    .menu-item {
+      transition: all 0.3s ease-in-out;
+    }
+
+    .menu-item.glow {
+      transition: box-shadow 0.5s ease-in-out, transform 0.3s ease-in-out;
+      transform: scale(1.1);
+    }
+
+</style>
+</head>
+<body>
+  <button id="login-btn">Log In</button>
+
+  <div id="main-content">
+    <h1>SEV3N.EXE</h1>
+    <p style="text-align:center;">System booted by love, powered by fans.</p>
+
+    <div class="menu">
+      <div class="menu-item" id="nav-log">[NAVIGATION LOG]</div>
+      <div class="menu-item" id="nav-artifacts">[RETRIEVED ARTIFACTS]</div>
+      <div class="menu-item" id="nav-supply">[SUPPLY STATIONS]</div>
+      <div class="menu-item" id="nav-comm">[COMM LINK]</div>
+      <div class="menu-item" id="play-game">[PLAY GAME]</div>
+      <div class="menu-item" id="nav-donate">[DONATE]</div>
+      <div class="menu-item" id="nav-message">[MESSAGE TO SEV3N]</div>
+    </div>
+
+    <div class="sectors" id="sector-list">
+      <div class="sector-card" onclick="toggleDetail('detail1'); glowEffect(this)">
+        <img src="card1.png" alt="Sector 1" class="sector-image">
+        <div class="sector-title">[SECTOR 1] - 18.000.000 VND</div>
+        <div class="sector-detail" id="detail1">Booth MOVIE ATVNCG (BHD Phạm Ngọc Thạch)</div>
+      </div>
+      <div class="sector-card" onclick="toggleDetail('detail2'); glowEffect(this)">
+        <img src="card2.png" alt="Sector 2" class="sector-image">
+        <div class="sector-title">[SECTOR 2] - 10.000.000 VND</div>
+        <div class="sector-detail" id="detail2">Backdrop và fangift support minishow Mây lang thang SX7</div>
+      </div>
+      <div class="sector-card" onclick="toggleDetail('detail3'); glowEffect(this)">
+        <img src="card3.png" alt="Sector 3" class="sector-image">
+        <div class="sector-title">[SECTOR 3] - 10.000.000 VND</div>
+        <div class="sector-detail" id="detail3">Cafe Event in Concert ATVNCG OCP3<br>Fangift in Concert ATVNCG OCP3</div>
+      </div>
+      <div class="sector-card" onclick="toggleDetail('detail4'); glowEffect(this)">
+        <img src="card4.png" alt="Sector 4" class="sector-image">
+        <div class="sector-title">[SECTOR 4] - 15.000.000 VND</div>
+        <div class="sector-detail" id="detail4">LED support minishow HN and concert ATVNCG</div>
+      </div>
+    </div>
+
+    <div id="game-frame">
+      <iframe src="shooter.html" width="90%" height="600px"></iframe>
+    </div>
+
+    <div id="donate-box">
+      <p>Cảm ơn bạn đã ủng hộ SEV3N.EXE!</p>
+      <p>Tổng donate: <span id="donate-amount">...</span></p>
+    </div>
+
+    <div id="message-box">
+      <form id="local-message-form" style="margin-bottom: 10px;">
+        <textarea id="local-message-input" rows="4" style="width:90%; padding:8px;" placeholder="Gửi thư cho SEV3N..."></textarea>
+        <br>
+        <button type="submit" style="margin-top: 8px; padding: 6px 12px;">Send</button>
+      </form>
+      <div id="local-message-history" class="chat-box"></div>
+    </div>
+    <div id="artifact-tier-section" style="display: none; text-align: center; margin-top: 20px;">
+      <div id="tier-buttons" style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+        <button class="tier-btn" data-tier="1">[TIER 1]: 89–199</button>
+        <button class="tier-btn" data-tier="2">[TIER 2]: 200–400</button>
+        <button class="tier-btn" data-tier="3">[TIER 3]: 401–776</button>
+        <button class="tier-btn" data-tier="4">[TIER 4]: 777–1039</button>
+        <button class="tier-btn" data-tier="5">[TIER 5]: >=1040</button>
+        <button class="tier-btn" data-tier="6">[TIER 6]: TOP</button>
+      </div>
+      <div id="tier-display" style="display: none; opacity: 0; transition: opacity 0.5s;">
+        <img id="tier-image" src="" alt="Tier Image" style="max-width: 90%; border-radius: 12px; box-shadow: 0 0 12px #00f7ff;">
+      </div>
+    </div>
+
+<div id="footer">© 2025 TOSE.TEAM | SYSTEM ID: 07-SEV3N</div>
+  </div>
+
+  <script>
+    const loginBtn = document.getElementById('login-btn');
+    const mainContent = document.getElementById('main-content');
+    const navLog = document.getElementById('nav-log');
+    const navArtifacts = document.getElementById('nav-artifacts');
+    const navSupply = document.getElementById('nav-supply');
+    const navComm = document.getElementById('nav-comm');
+    const playGame = document.getElementById('play-game');
+    const navDonate = document.getElementById('nav-donate');
+    const navMessage = document.getElementById('nav-message');
+
+    const sectors = document.getElementById('sector-list');
+    const gameFrame = document.getElementById('game-frame');
+    const donateBox = document.getElementById('donate-box');
+    const messageBox = document.getElementById('message-box');
+
+    
+    function hideAllSections() {
+      sectors.style.display = 'none';
+      gameFrame.style.display = 'none';
+      donateBox.style.display = 'none';
+      messageBox.style.display = 'none';
+      if (artifactSection) {
+        artifactSection.style.display = 'none';
+        tierDisplay.style.opacity = 0;
+        tierDisplay.style.display = 'none';
+        tierButtons.forEach(btn => btn.classList.remove('active'));
+      }
+    }
+
+
+    loginBtn.onclick = () => {
+      loginBtn.style.display = 'none';
+      mainContent.style.display = 'block';
+    };
+
+    const unlockTimeVN = new Date(Date.UTC(2025, 4, 4, 17, 0, 0)); // May 4, 00:00 GMT+7
+
+    navLog.onclick = (e) => {
+      const now = new Date();
+      const nowUTC7 = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+      if (nowUTC7 >= unlockTimeVN) {
+        hideAllSections();
+        sectors.style.display = 'flex';
+        glowEffect(e.target);
+      } else {
+        alert('SECTOR LOCKED: Available from 00:00, May 4, 2025 (GMT+7)');
+      }
+    };
+
+    navArtifacts.onclick = (e) => {
+      hideAllSections();
+      glowEffect(e.target);
+    };
+
+    navSupply.onclick = (e) => {
+      hideAllSections();
+      glowEffect(e.target);
+    };
+
+    navComm.onclick = (e) => {
+      hideAllSections();
+      glowEffect(e.target);
+    };
+
+    playGame.onclick = (e) => {
+      hideAllSections();
+      gameFrame.style.display = 'block';
+      glowEffect(e.target);
+    };
+
+    navDonate.onclick = (e) => {
+      hideAllSections();
+      donateBox.style.display = 'block';
+      glowEffect(e.target);
+    };
+
+    navMessage.onclick = (e) => {
+      hideAllSections();
+      messageBox.style.display = 'block';
+      glowEffect(e.target);
+    };
+
+    function toggleDetail(id) {
+      const detail = document.getElementById(id);
+      detail.style.display = detail.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function glowEffect(el) {
+      el.classList.add('glow');
+      setTimeout(() => {
+        el.classList.remove('glow');
+      }, 600);
+    }
+
+    // Load total donate
+    fetch("https://script.google.com/macros/s/AKfycbxiLG4SwruPm8A3Y9xxv9OclqHEJ0W2GjfjdiucaUapfF0cRCHFBVdmkx3nAx_cDAd2/exec")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("donate-amount").textContent = data + " VND";
+      });
+
+    // Local message handling
+    const form = document.getElementById("local-message-form");
+    const input = document.getElementById("local-message-input");
+    const historyBox = document.getElementById("local-message-history");
+
+    function loadMessages() {
+      const messages = JSON.parse(localStorage.getItem("messages")) || [];
+      historyBox.innerHTML = messages.map(m => `<p>&gt; ${m}</p>`).join("");
+    }
+
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const msg = input.value.trim();
+      if (msg) {
+        const messages = JSON.parse(localStorage.getItem("messages")) || [];
+        messages.push(msg);
+        localStorage.setItem("messages", JSON.stringify(messages));
+        input.value = "";
+        loadMessages();
+      }
+    });
+
+    loadMessages();
+  
+    const artifactSection = document.getElementById('artifact-tier-section');
+    const tierButtons = document.querySelectorAll('.tier-btn');
+    const tierDisplay = document.getElementById('tier-display');
+    const tierImage = document.getElementById('tier-image');
+
+    navArtifacts.onclick = (e) => {
+      hideAllSections();
+      artifactSection.style.display = 'block';
+      tierDisplay.style.opacity = 0;
+      tierDisplay.style.display = 'none';
+      tierButtons.forEach(btn => btn.classList.remove('active'));
+      glowEffect(e.target);
+    };
+
+    tierButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const tier = button.dataset.tier;
+        tierButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        tierImage.src = `tier${tier}.png`;
+        tierDisplay.style.opacity = 0;
+        tierDisplay.classList.add('show');
+        tierDisplay.style.display = 'block';
+      });
+    });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("sevii-form");
+  const input = document.getElementById("sevii-input");
+  const historyBox = document.getElementById("sevii-history");
+
+  let callCount = 0;
+  let nonsenseCount = 0;
+
+  const seviiKnowledge = {
+    "giới thiệu bản thân": "Tôi là SEVii trợ lý ảo, nết hơi cọc, hỏi câu này một lần thôi nha má",
+    "bạn là ai": "Nhìn tên là biết, hỏi nữa về ngủ",
+    "sevii là ai": "Nhìn tên là biết, hỏi nữa về ngủ",
+    "cường seven": "Người ấy hả? tư bản chuyên bắt online lúc nửa đêm nhưng lương không trả",
+    "tổ sẻ": "mẹ già tần tảo nhà em, hơi bóc lột tí thôi nhưng thương em",
+    "sevent": "Fan của ông chủ, đáng yêu hơn ông chủ, rất là xinh đẹp tuyệt vời",
+    "bạn có đó không": "SEVii đang trực, nói lẹ lẹ"
+  };
+
+  const jobQuestions = ["bạn làm gì", "công việc của bạn", "nhiệm vụ của bạn", "bạn có nhiệm vụ gì", "bạn làm nghề gì"];
+  const eatQuestions = ["ăn gì chưa", "ăn chưa", "bạn ăn chưa", "ăn uống gì chưa", "ăn gì rồi"];
+  const callPatterns = ["sevii ơi", "sevii à", "chào sevii", "hello sevii", "hello", "ê sevii"];
+  const complimentKeywords = ["dễ thương", "đáng yêu", "cute", "xinh", "đẹp", "ngầu", "tuyệt"];
+  const weatherKeywords = ["thời tiết", "trời hôm nay", "ngoài trời", "dự báo"];
+  const loveQuestions = ["yêu ai", "ai là người bạn yêu", "bạn yêu ai", "yêu ai nhất"];
+  const relationshipKeywords = ["độc thân", "có bồ", "có người yêu", "đang quen ai", "quan hệ tình cảm", "tình trạng quan hệ"];
+  const timeKeywords = ["mấy giờ", "giờ rồi", "giờ hiện tại", "giờ là bao nhiêu"];
+
+  function loadChatHistory() {
+    const history = JSON.parse(localStorage.getItem("seviiChat")) || [];
+    historyBox.innerHTML = history.map(item => {
+      const isUser = item.startsWith("Bạn:");
+      const align = isUser ? "flex-end" : "flex-start";
+      const bg = isUser ? "rgba(0, 247, 255, 0.2)" : "rgba(255, 255, 255, 0.1)";
+      const avatar = !isUser ? '<img src="sevii.jpg" style="width: 36px; height: 36px; border-radius: 50%; border: 1px solid #00f7ff; margin-right: 8px;">' : '';
+      const bubble = `<div style="background-color: ${bg}; color: #00f7ff; padding: 8px 12px; border-radius: 14px; max-width: 80%; display: inline-block;">${item}</div>`;
+      return isUser
+        ? `<div style="align-self: ${align};">${bubble}</div>`
+        : `<div style="align-self: ${align}; display: flex; align-items: flex-start;">${avatar}${bubble}</div>`;
+    }).join("");
+    historyBox.scrollTop = historyBox.scrollHeight;
+  }
+
+  function getTimeResponse() {
+    const now = new Date();
+    const hour = now.getHours();
+    const min = now.getMinutes().toString().padStart(2, "0");
+    return `Giờ là ${hour} giờ ${min} phút đó má!`;
+  }
+
+  function addChatLine(text) {
+    const history = JSON.parse(localStorage.getItem("seviiChat")) || [];
+    history.push(text);
+    localStorage.setItem("seviiChat", JSON.stringify(history));
+    loadChatHistory();
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const userInput = input.value.trim().toLowerCase();
+    if (!userInput) return;
+
+    addChatLine("Bạn: " + userInput);
+    input.value = "";
+
+    let matched = false;
+
+    for (const key in seviiKnowledge) {
+      if (userInput.includes(key)) {
+        addChatLine("SEVii: " + seviiKnowledge[key]);
+        matched = true;
+        nonsenseCount = 0;
+        return;
+      }
+    }
+
+    if (!matched && jobQuestions.some(q => userInput.includes(q))) {
+      addChatLine("SEVii: hầu mấy má nè");
+      matched = true;
+      nonsenseCount = 0;
+      return;
+    }
+
+    if (!matched && eatQuestions.some(q => userInput.includes(q))) {
+      addChatLine("SEVii: tui sống bằng năng lượng drama, khỏi ăn cũng được nha!");
+      matched = true;
+      nonsenseCount = 0;
+      return;
+    }
+
+    if (!matched && callPatterns.some(p => userInput.includes(p))) {
+      callCount++;
+      addChatLine("SEVii: " + (callCount >= 3 ? "Gọi hoài mệt quá má, nghỉ xíu nha." : getTimeResponse()));
+      matched = true;
+      nonsenseCount = 0;
+      return;
+    }
+
+    if (!matched && complimentKeywords.some(k => userInput.includes(k)) && (userInput.includes("sevii") || userInput.includes("bạn"))) {
+      addChatLine("SEVii: cảm ơn nha bà, tôi biết tôi đẹp trai, hiền lành, dễ thương, người gặp người yêu, hoa gặp hoa nở. hihi");
+      matched = true;
+      nonsenseCount = 0;
+      return;
+    }
+
+    if (!matched && weatherKeywords.some(k => userInput.includes(k))) {
+      addChatLine("SEVii: Lúc thì nắng nắng, lúc thì mưa mưa, lúc thì râm râm, thời tiết vô cùng đẹp để ra ngoài đi chơi.");
+      matched = true;
+      nonsenseCount = 0;
+      return;
+    }
+
+    if (!matched && loveQuestions.some(k => userInput.includes(k))) {
+      addChatLine("SEVii: Ủa hỏi chi kỳ cục vậy? Tôi chỉ yêu... chính mình thôi nha!");
+      matched = true;
+      nonsenseCount = 0;
+      return;
+    }
+
+    if (!matched && relationshipKeywords.some(k => userInput.includes(k))) {
+      addChatLine("SEVii: Tôi có bồ nè, có mấy má ế thôi!");
+      matched = true;
+      nonsenseCount = 0;
+      return;
+    }
+
+    if (!matched && timeKeywords.some(k => userInput.includes(k))) {
+      addChatLine("SEVii: " + getTimeResponse());
+      matched = true;
+      nonsenseCount = 0;
+      return;
+    }
+
+    
+    if (!matched && ["yêu sevii","thích sevii","crush sevii","sevii đẹp trai","sevii cute","sevii đáng yêu","muốn yêu sevii","sevii ơi yêu quá"].some(k => userInput.includes(k))) {
+      addChatLine("SEVii: đừng yêu tôi, không có kết quả đâu em");
+      matched = true;
+      nonsenseCount = 0;
+      return;
+    }
+
+    if (!matched && userInput.includes("drama")) {
+      if (userInput.includes("tổ") && userInput.includes("sẻ")) {
+        addChatLine("SEVii: Hôm qua mấy má đánh rắm trong phòng thối um");
+        matched = true;
+        nonsenseCount = 0;
+        return;
+      }
+      if (userInput.includes("cường") && userInput.includes("seven")) {
+        addChatLine("SEVii: Ổng hay bùng kèo tôi lắm, họ Hứa mà");
+        matched = true;
+        nonsenseCount = 0;
+        return;
+      }
+      if (userInput.includes("sevent")) {
+        addChatLine("SEVii: Xinh quá nên bị gato thôi, không có gì đâu");
+        matched = true;
+        nonsenseCount = 0;
+        return;
+      }
+    }
+
+    if (!matched && ["sevii ơi", "sevii à", "hello sevii", "ê sevii", "chào sevii", "hello", "hi", "xin chào"].some(p => userInput.includes(p))) {
+      addChatLine("SEVii: SEVii đây nè");
+      matched = true;
+      nonsenseCount = 0;
+      return;
+    }
+
+    if (!matched && userInput.includes("tiền")) {
+      addChatLine("SEVii: nghèo lắm mấy má ơi, donate cho nhà em đi");
+      matched = true;
+      nonsenseCount = 0;
+      return;
+    }
+
+    if (!matched && userInput.includes("nhảy")) {
+      addChatLine("SEVii: có donate thêm không? donate thì nhảy nè, đi làm mệt thấy bà còn bắt nhảy");
+      matched = true;
+      nonsenseCount = 0;
+      return;
+    }
+
+    if (!matched && userInput.includes("lương")) {
+      addChatLine("SEVii: bèo bọt lắm mấy má ơi, donate thêm đi Tổ Sẻ tăng lương cho iem");
+      matched = true;
+      nonsenseCount = 0;
+      return;
+    }
+if (!matched) {
+      if (userInput.includes("sector")) {
+        document.getElementById("nav-log")?.click();
+        addChatLine("SEVii: Đang mở mục SECTOR cho bạn...");
+        return;
+      } else if (userInput.includes("tier")) {
+        document.getElementById("nav-artifacts")?.click();
+        addChatLine("SEVii: Hiển thị các TIER cho bạn...");
+        return;
+      } else if (userInput.includes("game")) {
+        document.getElementById("play-game")?.click();
+        addChatLine("SEVii: Khởi động trò chơi...");
+        return;
+      } else if (userInput.includes("message")) {
+        document.getElementById("nav-message")?.click();
+        addChatLine("SEVii: Mở giao diện nhắn tin cho SEV3N...");
+        return;
+      }
+    }
+
+    nonsenseCount++;
+    if (nonsenseCount >= 3) {
+      addChatLine("SEVii: Nói gì kỳ cục vậy má? Không rep nữa đâu 🙄");
+    } else {
+      addChatLine("SEVii: Hông hiểu, nói lại coi?");
+    }
+  });
+
+  loadChatHistory();
+});
+
+</script>
+
+<!-- SEVii Chat Box (khôi phục lệnh gốc + giờ) -->
+<div id="sevii-container" style="position: fixed; bottom: 20px; right: 20px; width: 360px; background-color: rgba(0,0,0,0.95); border: 1px solid #00f7ff; border-radius: 10px; padding: 10px; color: #00f7ff; font-family: 'Courier New', Courier, monospace; z-index: 9999;">
+  <div style="margin-bottom: 6px;"><strong>SEVii:</strong> Gọi tui hoài chi vậy má?</div>
+  <div id="sevii-history" style="max-height: 240px; overflow-y: auto; background: rgba(0, 255, 255, 0.05); padding: 6px; border-radius: 4px; font-size: 14px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 6px;"></div>
+  <form id="sevii-form" style="display: flex; gap: 5px;">
+    <input id="sevii-input" type="text" placeholder="Gõ gì đi má..." style="flex: 1; padding: 6px; background: black; border: 1px solid #00f7ff; color: #00f7ff;">
+    <button type="submit" style="padding: 6px 10px; background: #00f7ff; color: black; border: none; cursor: pointer;">Gửi</button>
+  </form>
+</div>
+
+</body>
+</html>
