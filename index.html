@@ -465,10 +465,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "giới thiệu bản thân": "Tôi là SEVii trợ lý ảo, nết hơi cọc, hỏi câu này một lần thôi nha má",
     "bạn là ai": "Nhìn tên là biết, hỏi nữa về ngủ",
     "sevii là ai": "Nhìn tên là biết, hỏi nữa về ngủ",
-    "cường seven": "Người ấy hả? tư bản chuyên bắt online lúc nửa đêm nhưng lương không trả",
-    "tổ sẻ": "mẹ già tần tảo nhà em, hơi bóc lột tí thôi nhưng thương em",
-    "sevent": "Fan của ông chủ, đáng yêu hơn ông chủ, rất là xinh đẹp tuyệt vời",
-    "bạn có đó không": "SEVii đang trực, nói lẹ lẹ"
+                "bạn có đó không": "SEVii đang trực, nói lẹ lẹ"
   };
 
   const jobQuestions = ["bạn làm gì", "công việc của bạn", "nhiệm vụ của bạn", "bạn có nhiệm vụ gì", "bạn làm nghề gì"];
@@ -640,6 +637,79 @@ document.addEventListener("DOMContentLoaded", function () {
       matched = true;
       nonsenseCount = 0;
       return;
+    }
+
+    // --- Group: Chào hỏi ---
+    if (!matched && ["sevii ơi", "sevii à", "hello sevii", "ê sevii", "chào sevii", "hello", "hi", "xin chào"].some(p => userInput.includes(p))) {
+      addChatLine("SEVii: SEVii đây nè");
+      matched = true;
+      return;
+    }
+
+    // --- Group: Drama & Thói xấu ---
+    if (!matched && (userInput.includes("drama") || userInput.includes("thói xấu"))) {
+      const isToSe = userInput.includes("tổ") && userInput.includes("sẻ");
+      const isCuongSeven = userInput.includes("cường") && userInput.includes("seven");
+      const isSevent = userInput.includes("sevent");
+
+      if (isToSe) {
+        addChatLine("SEVii: Hôm qua mấy má đánh rắm trong phòng thối um");
+        matched = true;
+        return;
+      }
+      if (isCuongSeven) {
+        addChatLine("SEVii: Ổng hay bùng kèo tôi lắm, họ Hứa mà");
+        matched = true;
+        return;
+      }
+      if (isSevent) {
+        addChatLine("SEVii: Xinh quá nên bị gato thôi, không có gì đâu.");
+        matched = true;
+        return;
+      }
+    }
+
+    // --- Group: Phản ứng cảm xúc (tiền, lương, nhảy, tán tỉnh) ---
+    
+    // --- Group: Giới thiệu nhân vật ---
+    if (!matched) {
+      if (userInput.includes("tổ sẻ") && userInput.includes("là ai")) {
+        addChatLine("SEVii: mẹ già tần tảo nhà em, hơi bóc lột tí thôi nhưng thương em");
+        matched = true;
+        return;
+      }
+      if (userInput.includes("cường seven") && userInput.includes("là ai")) {
+        addChatLine("SEVii: Người ấy hả? tư bản chuyên bắt online lúc nửa đêm nhưng lương không trả");
+        matched = true;
+        return;
+      }
+      if (userInput.includes("sevent") && userInput.includes("là ai")) {
+        addChatLine("SEVii: Fan của ông chủ, đáng yêu hơn ông chủ, rất là xinh đẹp tuyệt vời");
+        matched = true;
+        return;
+      }
+    }
+if (!matched) {
+      if (userInput.includes("tiền")) {
+        addChatLine("SEVii: nghèo lắm mấy má ơi, donate cho nhà em đi");
+        matched = true;
+        return;
+      }
+      if (userInput.includes("lương")) {
+        addChatLine("SEVii: bèo bọt lắm mấy má ơi, donate thêm đi Tổ Sẻ tăng lương cho iem");
+        matched = true;
+        return;
+      }
+      if (userInput.includes("nhảy")) {
+        addChatLine("SEVii: có donate thêm không? donate thì nhảy nè, đi làm mệt thấy bà còn bắt nhảy");
+        matched = true;
+        return;
+      }
+      if (["yêu sevii", "thích sevii", "crush sevii", "sevii đẹp trai", "sevii cute", "sevii đáng yêu", "muốn yêu sevii", "sevii ơi yêu quá"].some(k => userInput.includes(k))) {
+        addChatLine("SEVii: đừng yêu tôi, không có kết quả đâu em");
+        matched = true;
+        return;
+      }
     }
 if (!matched) {
       if (userInput.includes("sector")) {
