@@ -782,65 +782,19 @@ document.addEventListener("DOMContentLoaded", function () {
     historyBox.scrollTop = historyBox.scrollHeight;
   }
 
-  // Cloudflare Worker script to proxy request to OpenAI
-
-      });
-    }
-
+  async function sendToGPT(prompt) {
     try {
-      const { prompt } = await request.json();
-
-      const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+      const response = await fetch("https://sevenexe.tose-cuong7.workers.dev", {
         method: "POST",
-        headers: {
-          "Authorization": "Bearer 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",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [{ role: "user", content: prompt }]
-        })
+        body: JSON.stringify({ prompt }),
       });
-
-      const openaiData = await openaiRes.json();
-
-      return new Response(JSON.stringify({
-        result: openaiData.choices?.[0]?.message?.content || "Không có phản hồi từ GPT"
-      }), {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        }
-      });
-    } catch (e) {
-      return new Response(JSON.stringify({ result: "Lỗi proxy: " + e.message }), {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        },
-        status: 500
-      });
+      const result = await response.json();
+      return result.result || "GPT không trả lời gì cả.";
+    } catch (err) {
+      return "Lỗi khi gọi GPT API.";
     }
   }
-};
-
-
-
-async function sendToGPT(prompt) {
-  try {
-    const response = await fetch("https://sevenexe.tose-cuong7.workers.dev", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ prompt })
-    });
-    const result = await response.json();
-    return result.result || "GPT không trả lời gì cả.";
-  } catch (err) {
-    return "Lỗi khi gọi GPT API.";
-  }
-}
+});
 
 </script>
 
