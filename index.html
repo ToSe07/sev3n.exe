@@ -784,7 +784,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function sendToGPT(prompt) {
     try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbw2ztDveChQhIw-bpULHmeqQEVKcFMbVfoNznZxU-ewICpZwoz4YhYJczlWBWLn7NmI/exec", {
+      const response = await fetch("https://sevenexe.tose-cuong7.workers.dev", {
         method: "POST",
         body: JSON.stringify({ prompt }),
       });
