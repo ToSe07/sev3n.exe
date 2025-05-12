@@ -783,16 +783,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Cloudflare Worker script to proxy request to OpenAI
-export default {
-  async fetch(request, env, ctx) {
-    if (request.method === "OPTIONS") {
-      return new Response(null, {
-        status: 204,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type"
-        }
+
       });
     }
 
@@ -833,6 +824,23 @@ export default {
   }
 };
 
+
+
+async function sendToGPT(prompt) {
+  try {
+    const response = await fetch("https://sevenexe.tose-cuong7.workers.dev", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ prompt })
+    });
+    const result = await response.json();
+    return result.result || "GPT không trả lời gì cả.";
+  } catch (err) {
+    return "Lỗi khi gọi GPT API.";
+  }
+}
 
 </script>
 
