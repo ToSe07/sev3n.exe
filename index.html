@@ -755,7 +755,7 @@ if (!matched) {
     }
 
     // --- Bị chửi ngu, hâm, đần, dốt ---
-    if (!matched && ["ngu", "hâm", "đần", "dốt"].some(k => userInput.includes(k))) {
+    if (!matched && ["ngu", "hâm", "đần", "dốt","láo"].some(k => userInput.includes(k))) {
       addChatLine("SEVii: Nói câu nữa cái dép biết bay");
       matched = true;
       return;
