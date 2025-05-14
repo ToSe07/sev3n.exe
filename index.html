@@ -731,11 +731,65 @@ if (!matched) {
       }
     }
 
-    nonsenseCount++;
+    
+    // --- Câu lệnh hỏi về sức khỏe ---
+    if (!matched && ["khỏe", "sức khỏe", "mệt không", "khỏe không", "dạo này sao rồi","khoẻ"].some(k => userInput.includes(k))) {
+      addChatLine("SEVii: Khoẻ lắm, chỉ cần mấy má không hỏi linh tinh là được");
+      matched = true;
+      return;
+    }
+
+    // --- Câu lệnh liên quan đến Cường ---
+    if (!matched && ["hứa việt cường", "anh cường", "anh bảy", "anh 7", "cường"].some(k => userInput.includes(k))) {
+      addChatLine("SEVii: Người ấy hả? Tư bản chuyên bắt online lúc nửa đêm nhưng lương không trả");
+      matched = true;
+      return;
+    }
+
+
+    // --- Câu hỏi về tuổi ---
+    if (!matched && ["bao nhiêu tuổi", "tuổi", "mấy tuổi"].some(k => userInput.includes(k))) {
+      addChatLine("SEVii: Em mới 7 tuổi, nhưng có bạn gái rồi nè, lêu lêu");
+      matched = true;
+      return;
+    }
+
+    // --- Bị chửi ngu, hâm, đần, dốt ---
+    if (!matched && ["ngu", "hâm", "đần", "dốt"].some(k => userInput.includes(k))) {
+      addChatLine("SEVii: Nói câu nữa cái dép biết bay");
+      matched = true;
+      return;
+    }
+
+
+    // --- Lặp lại câu hỏi nếu user chỉ gửi từ ngắn ---
+    if (!matched && ["à", "ừ", "ờ", "ơ", "ừa", "được", "hihi", "hehe", "haha"].includes(userInput.trim())) {
+      addChatLine("SEVii: Gì mà '" + userInput + "'? Nói rõ lại coi?");
+      matched = true;
+      return;
+    }
+
+nonsenseCount++;
     if (nonsenseCount >= 3) {
       addChatLine("SEVii: Nói gì kỳ cục vậy má? Không rep nữa đâu 🙄");
     } else {
       addChatLine("SEVii: Hông hiểu, nói lại coi?");
+      
+      // --- Sticker response when nonsense ---
+      const stickers = ["sticker01.png", "sticker02.png", "sticker03.png", "sticker04.png", "sticker05.png"];
+      const randomSticker = stickers[Math.floor(Math.random() * stickers.length)];
+      const img = document.createElement("img");
+      img.src = randomSticker;
+      img.alt = "SEVii sticker";
+      img.style.maxWidth = "80px";
+      img.style.borderRadius = "8px";
+      img.style.marginTop = "6px";
+      const div = document.createElement("div");
+      div.style.alignSelf = "flex-start";
+      div.innerHTML = '<img src="sevii.jpg" style="width: 36px; height: 36px; border-radius: 50%; border: 1px solid #00f7ff; margin-right: 8px;"><div style="display:inline-block;">' + img.outerHTML + '</div>';
+      historyBox.appendChild(div);
+      historyBox.scrollTop = historyBox.scrollHeight;
+
     }
   });
 
