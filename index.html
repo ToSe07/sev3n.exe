@@ -530,6 +530,19 @@ document.addEventListener("DOMContentLoaded", function () {
     input.value = "";
 
     let matched = false;
+    // Ưu tiên xử lý giới tính và mách
+    if (!matched && /(giới tính|nam hay nữ|con trai hay con gái)/.test(userInput)) {
+      addChatLine("SEVii: tôi là nam nhân đầu đội mũ chân đạp đất nha bà");
+      matched = true;
+      return;
+    }
+
+    if (!matched && /\bmách\b/.test(userInput)) {
+      addChatLine("SEVii: có giỏi thì mách anh Cường đi, lêu lêu");
+      matched = true;
+      return;
+    }
+
 
     for (const key in seviiKnowledge) {
       if (userInput.includes(key)) {
@@ -771,7 +784,7 @@ if (!matched) {
 
     // --- Bị chửi ngu, hâm, đần, dốt ---
     if (!matched && ["ngu", "hâm", "đần", "dốt","láo"].some(k => userInput.includes(k))) {
-      addChatLine("SEVii: Có giỏi thì mách anh Cường đi, lêu lêu");
+      addChatLine("SEVii: Nói câu nữa cái dép biết bay");
       matched = true;
       return;
     }
@@ -793,7 +806,7 @@ if (!matched) {
     }
 
     
-    if (!matched && (userInput.includes("thích ăn gì") || userInput.includes("ăn gì"))) {
+    if (!matched && (userInput.includes("thích ăn gì") || userInput.includes("gợi ý ăn"))) {
       addChatLine("SEVii: ăn gì cũng được, miễn là mình đẹp nha bà");
       matched = true;
       return;
