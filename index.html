@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SEV3N.EXE</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SEV3N.EXE</title>
+<style>
     body {
       margin: 0;
       padding: 0;
@@ -13,7 +14,7 @@
       background-size: cover;
       color: #00f7ff;
       overflow-x: hidden;
-    }
+        }
 
     #login-btn {
       position: fixed;
@@ -227,80 +228,78 @@
 </style>
 </head>
 <body>
-  <button id="login-btn">Log In</button>
-
-  <div id="main-content">
-    <h1>SEV3N.EXE</h1>
-    <p style="text-align:center;">System booted by love, powered by fans.</p>
-
-    <div class="menu">
-      <div class="menu-item" id="nav-log">[NAVIGATION LOG]</div>
-      <div class="menu-item" id="nav-artifacts">[RETRIEVED ARTIFACTS]</div>
-      <div class="menu-item" id="nav-supply">[SUPPLY STATIONS]</div>
-      <div class="menu-item" id="nav-comm">[COMM LINK]</div>
-      <div class="menu-item" id="play-game">[PLAY GAME]</div>
-      <div class="menu-item" id="nav-donate">[DONATE]</div>
-      <div class="menu-item" id="nav-message">[MESSAGE TO SEV3N]</div>
-    </div>
-
-    <div class="sectors" id="sector-list">
-      <div class="sector-card" onclick="toggleDetail('detail1'); glowEffect(this)">
-        <img src="card1.png" alt="Sector 1" class="sector-image">
-        <div class="sector-title">[SECTOR 1] - 8.000.000 VND</div>
-        <div class="sector-detail" id="detail1">Booth MOVIE ATVNCG (BHD Phạm Ngọc Thạch)</div>
-      </div>
-      <div class="sector-card" onclick="toggleDetail('detail2'); glowEffect(this)">
-        <img src="card2.png" alt="Sector 2" class="sector-image">
-        <div class="sector-title">[SECTOR 2] - 10.000.000 VND</div>
-        <div class="sector-detail" id="detail2">Backdrop và fangift support minishow Mây lang thang SX7</div>
-      </div>
-      <div class="sector-card" onclick="toggleDetail('detail3'); glowEffect(this)">
-        <img src="card3.png" alt="Sector 3" class="sector-image">
-        <div class="sector-title">[SECTOR 3] - 10.000.000 VND</div>
-        <div class="sector-detail" id="detail3">Cafe Event in Concert ATVNCG OCP3<br>Fangift in Concert ATVNCG OCP3</div>
-      </div>
-      <div class="sector-card" onclick="toggleDetail('detail4'); glowEffect(this)">
-        <img src="card4.png" alt="Sector 4" class="sector-image">
-        <div class="sector-title">[SECTOR 4] - 15.000.000 VND</div>
-        <div class="sector-detail" id="detail4">LED support minishow HN and concert ATVNCG</div>
-      </div>
-    </div>
-
-    <div id="game-frame">
-      <iframe src="shooter.html" width="90%" height="600px"></iframe>
-    </div>
-
-    <div id="donate-box">
-      <p>Cảm ơn bạn đã ủng hộ SEV3N.EXE!</p>
-      <p>Tổng donate: <span id="donate-amount">...</span></p>
-    </div>
-
-    <div id="message-box">
-      <form id="local-message-form" style="margin-bottom: 10px;">
-        <textarea id="local-message-input" rows="4" style="width:90%; padding:8px;" placeholder="Gửi thư cho SEV3N..."></textarea>
-        <br>
-        <button type="submit" style="margin-top: 8px; padding: 6px 12px;">Send</button>
-      </form>
-      <div id="local-message-history" class="chat-box"></div>
-    </div>
-    <div id="artifact-tier-section" style="display: none; text-align: center; margin-top: 20px;">
-      <div id="tier-buttons" style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-        <button class="tier-btn" data-tier="1">[TIER 1]: 89–199</button>
-        <button class="tier-btn" data-tier="2">[TIER 2]: 200–400</button>
-        <button class="tier-btn" data-tier="3">[TIER 3]: 401–776</button>
-        <button class="tier-btn" data-tier="4">[TIER 4]: 777–1039</button>
-        <button class="tier-btn" data-tier="5">[TIER 5]: >=1040</button>
-        <button class="tier-btn" data-tier="6">[TIER 6]: TOP</button>
-      </div>
-      <div id="tier-display" style="display: none; opacity: 0; transition: opacity 0.5s;">
-        <img id="tier-image" src="" alt="Tier Image" style="max-width: 90%; border-radius: 12px; box-shadow: 0 0 12px #00f7ff;">
-      </div>
-    </div>
-
+<button id="login-btn">Log In</button>
+<div id="main-content">
+<h1>SEV3N.EXE</h1>
+<p style="text-align:center;">System booted by love, powered by fans.</p>
+<div class="menu">
+<div class="menu-item" id="nav-log">[NAVIGATION LOG]</div>
+<div class="menu-item" id="nav-artifacts">[RETRIEVED ARTIFACTS]</div>
+<div class="menu-item" id="nav-supply">[SUPPLY STATIONS]</div>
+<div class="menu-item" id="nav-comm">[COMM LINK]</div>
+<div class="menu-item" id="play-game">[PLAY GAME]</div>
+<div class="menu-item" id="nav-donate">[DONATE]</div>
+<div class="menu-item" id="nav-message">[MESSAGE TO SEV3N]</div>
+</div>
+<div class="sectors" id="sector-list">
+<div class="sector-card" onclick="toggleDetail('detail1'); glowEffect(this)">
+<img alt="Sector 1" class="sector-image" src="card1.png"/>
+<div class="sector-title">[SECTOR 1] - 8.000.000 VND</div>
+<div class="sector-detail" id="detail1">Booth MOVIE ATVNCG (BHD Phạm Ngọc Thạch)</div>
+</div>
+<div class="sector-card" onclick="toggleDetail('detail2'); glowEffect(this)">
+<img alt="Sector 2" class="sector-image" src="card2.png"/>
+<div class="sector-title">[SECTOR 2] - 10.000.000 VND</div>
+<div class="sector-detail" id="detail2">Backdrop và fangift support minishow Mây lang thang SX7</div>
+</div>
+<div class="sector-card" onclick="toggleDetail('detail3'); glowEffect(this)">
+<img alt="Sector 3" class="sector-image" src="card3.png"/>
+<div class="sector-title">[SECTOR 3] - 10.000.000 VND</div>
+<div class="sector-detail" id="detail3">Cafe Event in Concert ATVNCG OCP3<br/>Fangift in Concert ATVNCG OCP3</div>
+</div>
+<div class="sector-card" onclick="toggleDetail('detail4'); glowEffect(this)">
+<img alt="Sector 4" class="sector-image" src="card4.png"/>
+<div class="sector-title">[SECTOR 4] - 15.000.000 VND</div>
+<div class="sector-detail" id="detail4">LED support minishow HN and concert ATVNCG</div>
+</div>
+</div>
+<div id="game-frame">
+<iframe height="600px" src="shooter.html" width="90%"></iframe>
+</div>
+<div id="donate-box">
+<p>Cảm ơn bạn đã ủng hộ SEV3N.EXE!</p>
+<p>Tổng donate: <span id="donate-amount">...</span></p>
+</div>
+<div id="message-box">
+<form id="local-message-form" style="margin-bottom: 10px;">
+<textarea id="local-message-input" placeholder="Gửi thư cho SEV3N..." rows="4" style="width:90%; padding:8px;"></textarea>
+<br/>
+<button style="margin-top: 8px; padding: 6px 12px;" type="submit">Send</button>
+</form>
+<div class="chat-box" id="local-message-history"></div>
+</div>
+<div id="artifact-tier-section" style="display: none; text-align: center; margin-top: 20px;">
+<div id="tier-buttons" style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+<button class="tier-btn" data-tier="1">[TIER 1]: 89–199</button>
+<button class="tier-btn" data-tier="2">[TIER 2]: 200–400</button>
+<button class="tier-btn" data-tier="3">[TIER 3]: 401–776</button>
+<button class="tier-btn" data-tier="4">[TIER 4]: 777–1039</button>
+<button class="tier-btn" data-tier="5">[TIER 5]: &gt;=1040</button>
+<button class="tier-btn" data-tier="6">[TIER 6]: TOP</button>
+</div>
+<div id="tier-display" style="display: none; opacity: 0; transition: opacity 0.5s;">
+<img alt="Tier Image" id="tier-image" src="" style="max-width: 90%; border-radius: 12px; box-shadow: 0 0 12px #00f7ff;"/>
+</div>
+</div>
+<div id="supply-image-box" style="display: none; text-align: center; margin-top: 20px;">
+<img alt="Booth Image" id="supply-image" src="booth.png" style="opacity: 0; max-width: 90%; transition: opacity 1s ease-in-out; border-radius: 12px;"/>
+</div>
+<div id="qr-code-box" style="display: none; text-align: center; margin-top: 20px;">
+<img alt="QR Code" src="QR.png" style="max-width: 300px; border-radius: 12px;"/>
+</div>
 <div id="footer">© 2025 TOSE.TEAM | SYSTEM ID: 07-SEV3N</div>
-  </div>
-
-  <script>
+</div>
+<script>
     const loginBtn = document.getElementById('login-btn');
     const mainContent = document.getElementById('main-content');
     const navLog = document.getElementById('nav-log');
@@ -318,6 +317,8 @@
 
     
     function hideAllSections() {
+      const booth = document.getElementById("supply-image-box");
+      if (booth) booth.style.display = "none";
       sectors.style.display = 'none';
       gameFrame.style.display = 'none';
       donateBox.style.display = 'none';
@@ -355,10 +356,21 @@
       glowEffect(e.target);
     };
 
+    
     navSupply.onclick = (e) => {
       hideAllSections();
+      const box = document.getElementById("supply-image-box");
+      if (box) box.style.display = "block";
+      const img = document.getElementById("supply-image");
+      if (img) {
+        img.style.opacity = "0";
+        setTimeout(() => {
+          img.style.opacity = "1";
+        }, 50);
+      }
       glowEffect(e.target);
     };
+    
 
     navComm.onclick = (e) => {
       hideAllSections();
@@ -371,11 +383,14 @@
       glowEffect(e.target);
     };
 
+    
     navDonate.onclick = (e) => {
       hideAllSections();
-      donateBox.style.display = 'block';
+      const qr = document.getElementById("qr-code-box");
+      if (qr) qr.style.display = "block";
       glowEffect(e.target);
     };
+    
 
     navMessage.onclick = (e) => {
       hideAllSections();
@@ -756,7 +771,7 @@ if (!matched) {
 
     // --- Bị chửi ngu, hâm, đần, dốt ---
     if (!matched && ["ngu", "hâm", "đần", "dốt","láo"].some(k => userInput.includes(k))) {
-      addChatLine("SEVii: Nói câu nữa cái dép biết bay");
+      addChatLine("SEVii: Có giỏi thì mách anh Cường đi, lêu lêu");
       matched = true;
       return;
     }
@@ -769,7 +784,28 @@ if (!matched) {
       return;
     }
 
-nonsenseCount++;
+
+    if (!matched && userInput.includes("station")) {
+      document.getElementById("nav-supply")?.click();
+      addChatLine("SEVii: Đang mở SUPPLY STATIONS cho bạn...");
+      matched = true;
+      return;
+    }
+
+    
+    if (!matched && (userInput.includes("thích ăn gì") || userInput.includes("ăn gì"))) {
+      addChatLine("SEVii: ăn gì cũng được, miễn là mình đẹp nha bà");
+      matched = true;
+      return;
+    }
+
+    if (!matched && userInput.includes("drama")) {
+      addChatLine("SEVii: Anh Cường hay ngủ ngáy lắm, còn há mỏ nữa, mắt tôi thâm là không ngủ được vì ổng đó bà");
+      matched = true;
+      return;
+    }
+
+    nonsenseCount++;
     if (nonsenseCount >= 3) {
       addChatLine("SEVii: Nói gì kỳ cục vậy má? Không rep nữa đâu 🙄");
     } else {
@@ -851,33 +887,28 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 </script>
-
 <!-- SEVii Chat Box (khôi phục lệnh gốc + giờ) -->
 <div id="sevii-container" style="position: fixed; bottom: 20px; right: 20px; width: 360px; background-color: rgba(0,0,0,0.95); border: 1px solid #00f7ff; border-radius: 10px; padding: 10px; color: #00f7ff; font-family: 'Courier New', Courier, monospace; z-index: 9999;">
-  <div style="margin-bottom: 6px;"><strong>SEVii:</strong> Gọi tui hoài chi vậy má?</div>
-  <div id="sevii-history" style="max-height: 240px; overflow-y: auto; background: rgba(0, 255, 255, 0.05); padding: 6px; border-radius: 4px; font-size: 14px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 6px;"></div>
-  <form id="sevii-form" style="display: flex; gap: 5px;">
-    <input id="sevii-input" type="text" placeholder="Gõ gì đi má..." style="flex: 1; padding: 6px; background: black; border: 1px solid #00f7ff; color: #00f7ff;">
-    <button type="submit" style="padding: 6px 10px; background: #00f7ff; color: black; border: none; cursor: pointer;">Gửi</button>
-  </form>
+<div style="margin-bottom: 6px;"><strong>SEVii:</strong> Gọi tui hoài chi vậy má?</div>
+<div id="sevii-history" style="max-height: 240px; overflow-y: auto; background: rgba(0, 255, 255, 0.05); padding: 6px; border-radius: 4px; font-size: 14px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 6px;"></div>
+<form id="sevii-form" style="display: flex; gap: 5px;">
+<input id="sevii-input" placeholder="Gõ gì đi má..." style="flex: 1; padding: 6px; background: black; border: 1px solid #00f7ff; color: #00f7ff;" type="text"/>
+<button style="padding: 6px 10px; background: #00f7ff; color: black; border: none; cursor: pointer;" type="submit">Gửi</button>
+</form>
 </div>
-
-
 <!-- SEVii Chat Box -->
 <div id="sevii-container" style="display:none; position: fixed; bottom: 80px; right: 20px; width: 320px; background-color: rgba(0,0,0,0.95); border: 1px solid #00f7ff; border-radius: 10px; padding: 10px; color: #00f7ff; font-family: 'Courier New', monospace; z-index: 9999;">
-  <div style="margin-bottom: 6px; font-weight: bold;">SEVii: Gọi tui hoài chi vậy má?</div>
-  <div id="sevii-history" style="max-height: 240px; overflow-y: auto; background: rgba(0,255,255,0.05); padding: 6px; border-radius: 4px; font-size: 14px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 6px;"></div>
-  <form id="sevii-form" style="display: flex; gap: 5px;">
-    <input id="sevii-input" type="text" placeholder="Gõ gì đi má..." style="flex: 1; padding: 6px; background: black; border: 1px solid #00f7ff; color: #00f7ff;">
-    <button type="submit" style="padding: 6px 10px; background: #00f7ff; color: black; border: none; cursor: pointer;">Gửi</button>
-  </form>
+<div style="margin-bottom: 6px; font-weight: bold;">SEVii: Gọi tui hoài chi vậy má?</div>
+<div id="sevii-history" style="max-height: 240px; overflow-y: auto; background: rgba(0,255,255,0.05); padding: 6px; border-radius: 4px; font-size: 14px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 6px;"></div>
+<form id="sevii-form" style="display: flex; gap: 5px;">
+<input id="sevii-input" placeholder="Gõ gì đi má..." style="flex: 1; padding: 6px; background: black; border: 1px solid #00f7ff; color: #00f7ff;" type="text"/>
+<button style="padding: 6px 10px; background: #00f7ff; color: black; border: none; cursor: pointer;" type="submit">Gửi</button>
+</form>
 </div>
-
 <!-- Nút gọi SEVii -->
 <button id="toggle-sevii-btn" style="display:none; position: fixed; bottom: 20px; right: 20px; z-index: 99999;
 background-color: #00f7ff; color: black; font-weight: bold; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer;">
 💬 Chat với SEVii
 </button>
-
 </body>
 </html>
