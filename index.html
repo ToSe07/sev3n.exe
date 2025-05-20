@@ -264,7 +264,19 @@
 </div>
 </div>
 <div id="game-frame">
-<iframe height="600px" src="shooter.html" width="90%"></iframe>
+
+<div style="margin-top: 20px; text-align: center;">
+  <button onclick="loadGame('shooter.html')" class="tier-btn">SHOOTER</button>
+  <button onclick="loadGame('race.html')" class="tier-btn">RACE</button>
+</div>
+<iframe id="game-iframe" height="600px" width="90%" style="margin-top: 20px;" src=""></iframe>
+<script>
+  function loadGame(gameUrl) {
+    const iframe = document.getElementById("game-iframe");
+    iframe.src = gameUrl;
+  }
+</script>
+
 </div>
 <div id="donate-box">
 <p>Cảm ơn bạn đã ủng hộ SEV3N.EXE!</p>
@@ -806,7 +818,7 @@ if (!matched) {
     }
 
     
-    if (!matched && (userInput.includes("thích ăn gì") || userInput.includes("ăn gì"))) {
+    if (!matched && (userInput.includes("thích ăn gì") || userInput.includes("gợi ý ăn"))) {
       addChatLine("SEVii: ăn gì cũng được, miễn là mình đẹp nha bà");
       matched = true;
       return;
