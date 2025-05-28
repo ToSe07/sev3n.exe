@@ -264,19 +264,17 @@
 </div>
 </div>
 <div id="game-frame">
-
 <div style="margin-top: 20px; text-align: center;">
-  <button onclick="loadGame('shooter.html')" class="tier-btn">SHOOTER</button>
-  <button onclick="loadGame('race.html')" class="tier-btn">RACE</button>
-</div>
-<iframe id="game-iframe" height="600px" width="90%" style="margin-top: 20px;" src=""></iframe>
+<button class="tier-btn" onclick="loadGame('shooter.html')">SHOOTER</button>
+<button class="tier-btn" onclick="loadGame('race.html')">RACE</button>
+<button class="tier-btn" onclick="loadGame('throw.html')">POWER THROW</button></div>
+<iframe height="600px" id="game-iframe" src="" style="margin-top: 20px;" width="90%"></iframe>
 <script>
   function loadGame(gameUrl) {
     const iframe = document.getElementById("game-iframe");
     iframe.src = gameUrl;
   }
 </script>
-
 </div>
 <div id="donate-box">
 <p>Cảm ơn bạn đã ủng hộ SEV3N.EXE!</p>
