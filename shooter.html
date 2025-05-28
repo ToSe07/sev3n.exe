@@ -259,18 +259,7 @@
     document.addEventListener('keydown', (e) => keys[e.key] = true);
     document.addEventListener('keyup', (e) => keys[e.key] = false);
 
-    canvas.addEventListener('touchstart', (e) => {
-      const touchX = e.touches[0].clientX;
-      if (touchX < canvas.width / 2) {
-        keys['ArrowLeft'] = true;
-      } else {
-        keys['ArrowRight'] = true;
-      }
-    });
-    canvas.addEventListener('touchend', () => {
-      keys['ArrowLeft'] = false;
-      keys['ArrowRight'] = false;
-    });
+    
 
     function startGame() {
       let counter = 3;
@@ -308,6 +297,42 @@
     restartBtn.addEventListener('click', () => {
       startGame();
     });
-  </script>
+  
+let isDragging = false;
+
+canvas.addEventListener('touchstart', (e) => {
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  const x = touch.clientX - rect.left;
+  const y = touch.clientY - rect.top;
+
+  if (
+    x >= spaceship.x &&
+    x <= spaceship.x + spaceship.width &&
+    y >= spaceship.y &&
+    y <= spaceship.y + spaceship.height
+  ) {
+    isDragging = true;
+  }
+});
+
+canvas.addEventListener('touchmove', (e) => {
+  if (!isDragging) return;
+  e.preventDefault();
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  const x = touch.clientX - rect.left;
+
+  spaceship.x = x - spaceship.width / 2;
+
+  if (spaceship.x < 0) spaceship.x = 0;
+  if (spaceship.x + spaceship.width > canvas.width) spaceship.x = canvas.width - spaceship.width;
+}, { passive: false });
+
+canvas.addEventListener('touchend', () => {
+  isDragging = false;
+});
+
+</script>
 </body>
 </html>
