@@ -95,7 +95,7 @@ canvas {
     const itemImages = ["sao.png", "dua.png", "dep.png", "ship.png"];
     let loadedItems = [];
 
-    alien1.img.src = "sticker04.png";
+    alien1.img.src = "sevii2.png";
     alien2.img.src = "sticker05.png";
 
     const rocks = [];
@@ -157,10 +157,43 @@ canvas {
     }
 
     
+
 function botAction() {
-  // Smarter bot throws with varied angle and power
-  const angleDeg = 35 + Math.random() * 20; // 35 to 55 degrees
-  const power = 40 + Math.random() * 30; // 40 to 70 power
+  const dx = alien2.x - alien1.x;
+  const dy = alien2.y - alien1.y;
+  const gravity = 0.3;
+
+  // Bot targets player with calculated angle and power
+  for (let angleDeg = 20; angleDeg <= 70; angleDeg += 1) {
+    const rad = angleDeg * Math.PI / 180;
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+
+    // Estimate initial velocity needed
+    const denom = (dx * Math.tan(rad) - dy);
+    if (denom <= 0) continue;
+
+    const velocity = Math.sqrt((gravity * dx * dx) / (2 * cos * cos * denom));
+    if (velocity > 0 && velocity < 20) {
+      const vx = -Math.cos(rad) * velocity;
+      const vy = -Math.sin(rad) * velocity;
+      rocks.push({
+        x: alien2.x - 30,
+        y: alien2.y - 20,
+        vx,
+        vy,
+        from: "bot",
+        damage: 10,
+        itemImage: null
+      });
+      currentTurn = "player";
+      return;
+    }
+  }
+
+  // fallback random shot
+  const angleDeg = 40 + Math.random() * 20;
+  const power = 40 + Math.random() * 30;
   const rad = angleDeg * Math.PI / 180;
   const velocity = power / 5;
   rocks.push({
@@ -174,6 +207,7 @@ function botAction() {
   });
   currentTurn = "player";
 }
+
 
 
     function updateRocks() {
