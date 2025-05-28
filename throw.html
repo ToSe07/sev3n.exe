@@ -136,6 +136,7 @@ canvas {
       }
 
       rocks.push({
+        itemImage: isSpecial ? alien1.specialItem : null,
         x: alien1.x + 30,
         y: alien1.y - 20,
         vx: Math.cos(rad) * velocity,
@@ -155,19 +156,25 @@ canvas {
       setTimeout(botAction, 1500);
     }
 
-    function botAction() {
-      const rad = Math.PI / 4;
-      const velocity = 12;
-      rocks.push({
-        x: alien2.x - 30,
-        y: alien2.y - 20,
-        vx: -Math.cos(rad) * velocity,
-        vy: -Math.sin(rad) * velocity,
-        from: "bot",
-        damage: 10
-      });
-      currentTurn = "player";
-    }
+    
+function botAction() {
+  // Smarter bot throws with varied angle and power
+  const angleDeg = 35 + Math.random() * 20; // 35 to 55 degrees
+  const power = 40 + Math.random() * 30; // 40 to 70 power
+  const rad = angleDeg * Math.PI / 180;
+  const velocity = power / 5;
+  rocks.push({
+    x: alien2.x - 30,
+    y: alien2.y - 20,
+    vx: -Math.cos(rad) * velocity,
+    vy: -Math.sin(rad) * velocity,
+    from: "bot",
+    damage: 10,
+    itemImage: null
+  });
+  currentTurn = "player";
+}
+
 
     function updateRocks() {
       for (let i = rocks.length - 1; i >= 0; i--) {
@@ -226,11 +233,15 @@ canvas {
       ctx.lineTo(endX, endY);
       ctx.stroke();
 
-      ctx.fillStyle = "gray";
       for (let r of rocks) {
-        ctx.beginPath();
-        ctx.arc(r.x, r.y, 6, 0, Math.PI * 2);
-        ctx.fill();
+        if (r.itemImage) {
+          ctx.drawImage(r.itemImage, r.x - 10, r.y - 10, 20, 20);
+        } else {
+          ctx.fillStyle = "gray";
+          ctx.beginPath();
+          ctx.arc(r.x, r.y, 6, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
 
       ctx.fillStyle = "rgba(255,255,255,0.2)";
