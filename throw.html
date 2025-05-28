@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Alien Power Throw – Full Mobile + Special Items</title>
+  <style>
+    body {
+      margin: 0;
+      background: url('background2.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: sans-serif;
+      color: white;
+      text-align: center;
+    }
+    canvas {
+      display: block;
+      margin: 20px auto;
+      border: 2px solid #fff;
+      touch-action: none;
+    }
+    #log {
+      height: 100px;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.6);
+      padding: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>👽 Alien Power Throw – Mobile Special Mode 🚀</h1>
+  
+  <div id="intro" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+     background: rgba(0,0,0,0.85); color: white; display: flex; flex-direction: column;
+     align-items: center; justify-content: center; z-index: 10; font-size: 18px; line-height: 1.6;">
+  <div style="max-width: 600px; text-align: center; padding: 20px;">
+    <h2>Cách chơi</h2>
+    <p><strong>💻 Trên máy tính:</strong><br>
+    👾 Di chuyển: <strong>← / →</strong><br>
+    🎯 Chỉnh góc: <strong>↑ / ↓</strong><br>
+    💣 Giữ <strong>Space</strong> để nạp lực, thả ra để ném đá<br>
+    🌟 Sau mỗi 3 lần ném, bạn nhận <strong>vật phẩm đặc biệt</strong> – nhấn <strong>S</strong> để dùng</p>
+    <hr style="margin: 20px 0; border: 0; border-top: 1px solid white;">
+    <p><strong>📱 Trên điện thoại:</strong><br>
+    👆 Vuốt lên/xuống: <strong>Tăng / giảm góc ném</strong><br>
+    👈👉 Vuốt trái/phải: <strong>Di chuyển nhân vật</strong><br>
+    ✋ Nhấn giữ màn hình: <strong>Nạp lực</strong><br>
+    🖐️ Thả tay: <strong>Ném đá</strong></p>
+    <button onclick="startGame()" style="padding: 10px 20px; font-size: 18px; background: yellow; border: none; cursor: pointer;">Bắt đầu chơi</button>
+  </div>
+</div>
+<canvas id="gameCanvas"
+ width="800" height="400"></canvas>
+  <div id="log"></div>
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const alien1 = { x: 100, y: 300, hp: 100, img: new Image(), flash: 0, throwCount: 0, specialReady: false, specialItem: null };
+    const alien2 = { x: 700, y: 300, hp: 100, img: new Image(), flash: 0, direction: -1 };
+
+    const itemImages = ["sao.png", "dua.png", "dep.png", "ship.png"];
+    let loadedItems = [];
+
+    alien1.img.src = "sticker04.png";
+    alien2.img.src = "sticker05.png";
+
+    const rocks = [];
+    let currentTurn = "player";
+    let keys = {};
+    let angle = 45;
+    let power = 0;
+    let isCharging = false;
+    let chargeStart = 0;
+
+    function log(msg) {
+      const logDiv = document.getElementById("log");
+      logDiv.innerHTML += msg + "<br>";
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    function preloadItems(callback) {
+      let count = 0;
+      itemImages.forEach(src => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
+          loadedItems.push(img);
+          if (++count === itemImages.length) callback();
+        };
+      });
+    }
+
+    function throwRock(finalPower, isSpecial = false) {
+      if (currentTurn !== "player" || alien1.hp <= 0 || alien2.hp <= 0) return;
+      const rad = angle * Math.PI / 180;
+      const velocity = finalPower / 5;
+      let damage = isSpecial ? 20 : 10;
+
+      if (isSpecial) {
+        alien1.specialReady = false;
+        log("💥 Bạn dùng đòn đặc biệt!");
+      }
+
+      rocks.push({
+        x: alien1.x + 30,
+        y: alien1.y - 20,
+        vx: Math.cos(rad) * velocity,
+        vy: -Math.sin(rad) * velocity,
+        from: "player",
+        damage
+      });
+
+      alien1.throwCount++;
+      if (alien1.throwCount % 3 === 0) {
+        alien1.specialReady = true;
+        alien1.specialItem = loadedItems[Math.floor(Math.random() * loadedItems.length)];
+        log("🎯 Bạn nhận được vật phẩm đặc biệt!");
+      }
+
+      currentTurn = "bot";
+      setTimeout(botAction, 1500);
+    }
+
+    function botAction() {
+      const rad = Math.PI / 4;
+      const velocity = 12;
+      rocks.push({
+        x: alien2.x - 30,
+        y: alien2.y - 20,
+        vx: -Math.cos(rad) * velocity,
+        vy: -Math.sin(rad) * velocity,
+        from: "bot",
+        damage: 10
+      });
+      currentTurn = "player";
+    }
+
+    function updateRocks() {
+      for (let i = rocks.length - 1; i >= 0; i--) {
+        const r = rocks[i];
+        r.x += r.vx;
+        r.y += r.vy;
+        r.vy += 0.3;
+
+        if (r.from === "player" && Math.abs(r.x - alien2.x) < 30 && Math.abs(r.y - alien2.y) < 30) {
+          alien2.hp -= r.damage;
+          alien2.flash = 10;
+          rocks.splice(i, 1);
+        } else if (r.from === "bot" && Math.abs(r.x - alien1.x) < 30 && Math.abs(r.y - alien1.y) < 30) {
+          alien1.hp -= r.damage;
+          alien1.flash = 10;
+          rocks.splice(i, 1);
+        } else if (r.x < 0 || r.x > 800 || r.y > 400) {
+          rocks.splice(i, 1);
+        }
+      }
+
+      // bot tránh đạn đơn giản
+      if (currentTurn === "bot") {
+        alien2.x += alien2.direction * 2;
+        if (alien2.x < 420 || alien2.x > 770) alien2.direction *= -1;
+      }
+
+      if (alien1.flash > 0) alien1.flash--;
+      if (alien2.flash > 0) alien2.flash--;
+    }
+
+    function drawScene() {
+      ctx.clearRect(0, 0, 800, 400);
+      ctx.fillStyle = "red";
+      ctx.fillRect(20, 20, alien1.hp * 2, 20);
+      ctx.fillRect(580, 20, alien2.hp * 2, 20);
+      ctx.fillStyle = "white";
+      ctx.fillText("HP: " + alien1.hp, 90, 35);
+      ctx.fillText("HP: " + alien2.hp, 650, 35);
+
+      if (alien1.flash % 2 === 0) ctx.drawImage(alien1.img, alien1.x - 30, alien1.y - 50, 60, 60);
+      if (alien2.flash % 2 === 0) ctx.drawImage(alien2.img, alien2.x - 30, alien2.y - 50, 60, 60);
+
+      ctx.strokeStyle = "white";
+      ctx.beginPath();
+      ctx.moveTo(400, 0);
+      ctx.lineTo(400, 400);
+      ctx.stroke();
+
+      const endX = alien1.x + Math.cos(angle * Math.PI / 180) * 50;
+      const endY = alien1.y - Math.sin(angle * Math.PI / 180) * 50;
+      ctx.strokeStyle = "yellow";
+      ctx.beginPath();
+      ctx.moveTo(alien1.x, alien1.y);
+      ctx.lineTo(endX, endY);
+      ctx.stroke();
+
+      ctx.fillStyle = "gray";
+      for (let r of rocks) {
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.fillStyle = "rgba(255,255,255,0.2)";
+      ctx.fillRect(20, 360, 200, 20);
+      ctx.fillStyle = "yellow";
+      ctx.fillRect(20, 360, Math.min(power, 70) / 70 * 200, 20);
+      ctx.fillStyle = "white";
+      ctx.fillText("Power: " + Math.floor(power), 230, 375);
+
+      if (alien1.specialReady && alien1.specialItem) {
+        ctx.drawImage(alien1.specialItem, 280, 320, 40, 40);
+        ctx.fillText("SPECIAL READY!", 330, 345);
+      }
+    }
+
+    function gameLoop() {
+      handleInput();
+      if (isCharging) power = Math.min(70, (performance.now() - chargeStart) / 10);
+      updateRocks();
+      drawScene();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function handleInput() {
+      if (keys["ArrowLeft"]) alien1.x = Math.max(30, Math.min(alien1.x - 3, 395));
+      if (keys["ArrowRight"]) alien1.x = Math.min(395, alien1.x + 3);
+      if (keys["ArrowUp"]) angle = Math.min(90, angle + 1);
+      if (keys["ArrowDown"]) angle = Math.max(0, angle - 1);
+    }
+
+    document.addEventListener("keydown", e => {
+      keys[e.key] = true;
+      if (e.code === "Space" && !isCharging && currentTurn === "player") {
+        isCharging = true;
+        chargeStart = performance.now();
+        power = 0;
+      }
+      if (e.key === "s" && alien1.specialReady) {
+        throwRock(70, true);
+      }
+    });
+
+    document.addEventListener("keyup", e => {
+      keys[e.key] = false;
+      if (e.code === "Space" && isCharging) {
+        throwRock(power);
+        isCharging = false;
+        power = 0;
+      }
+    });
+
+    // Touch gestures
+    let touchStartX = 0, touchStartY = 0;
+    canvas.addEventListener("touchstart", e => {
+      const t = e.touches[0];
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+      chargeStart = performance.now();
+      isCharging = true;
+    });
+
+    canvas.addEventListener("touchend", e => {
+      if (isCharging) {
+        power = Math.min(70, (performance.now() - chargeStart) / 10);
+        throwRock(power);
+        isCharging = false;
+        power = 0;
+      }
+    });
+
+    canvas.addEventListener("touchmove", e => {
+      const t = e.touches[0];
+      const dx = t.clientX - touchStartX;
+      const dy = t.clientY - touchStartY;
+      if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 20) alien1.x = Math.min(395, alien1.x + 3);
+        else if (dx < -20) alien1.x = Math.max(30, alien1.x - 3);
+      } else {
+        if (dy < -10) angle = Math.min(90, angle + 1);
+        else if (dy > 10) angle = Math.max(0, angle - 1);
+      }
+    });
+
+    preloadItems(gameLoop);
+  
+function startGame() {
+  document.getElementById("intro").style.display = "none";
+}
+</script>
+
+</body>
+</html>
