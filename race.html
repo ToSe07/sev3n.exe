@@ -122,7 +122,8 @@
       const ships = numbers.map((num, index) => {
         const ship = document.createElement('div');
         ship.className = 'spaceship';
-        ship.style.top = `${index * 100 + 20}px`;
+        const spacing = container.clientHeight / (numbers.length + 1);
+ship.style.top = `${(index + 1) * spacing}px`;
         ship.style.left = '0px';
 
         const img = document.createElement('img');
